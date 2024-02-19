@@ -1,5 +1,8 @@
 const express = require("express");
 const shakeDatabase = require("./connection/database");
+const swaggerUI = require("swagger-ui-express");
+const swaggerSpec = require("./swagger.docs");
+
 //
 require("dotenv").config();
 
@@ -11,8 +14,15 @@ app.use(express.json());
 
 app.use("/api/v1/pets", require("./routes/pet.route"));
 
+// SWAGGER
+app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+
 app.get("/", async (req, res) => {
-  res.status(200).json({ message: "Welcome to our amazing pet store" });
+  res
+    .status(200)
+    .json({
+      message: `Welcome to Our amazing pet store; Explore our API docs at http://localhost:${PORT}/docs`
+    });
 });
 // SHAKE DATABASE
 shakeDatabase(() => {
